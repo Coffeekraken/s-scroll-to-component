@@ -23,7 +23,8 @@ Default : **400**
 
 ## offset:
 
-Specify an offset in pixels
+Specify an offset in pixels.
+This can also be in format "up:down" so you can have different offset depending on the scroll direction.
 
 Type : **{ [Number](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Number) }**
 

@@ -8,10 +8,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _SWebComponent = require('coffeekraken-sugar/js/core/SWebComponent');
-
-var _SWebComponent2 = _interopRequireDefault(_SWebComponent);
-
 var _scrollTo = require('coffeekraken-sugar/js/dom/scrollTo');
 
 var _scrollTo2 = _interopRequireDefault(_scrollTo);
@@ -27,6 +23,14 @@ var _dispatchEvent2 = _interopRequireDefault(_dispatchEvent);
 var _sNativeWebComponent = require('coffeekraken-sugar/js/core/sNativeWebComponent');
 
 var _sNativeWebComponent2 = _interopRequireDefault(_sNativeWebComponent);
+
+var _scrollTop = require('coffeekraken-sugar/js/dom/scrollTop');
+
+var _scrollTop2 = _interopRequireDefault(_scrollTop);
+
+var _offset = require('coffeekraken-sugar/js/dom/offset');
+
+var _offset2 = _interopRequireDefault(_offset);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -106,8 +110,25 @@ var SScrollToComponent = function (_native) {
        */
       (0, _dispatchEvent2.default)(this, this.componentNameDash + ':start');
 
+      // handle the offset
+      var offset = this.props.offset;
+
+      // handle custom offset with up:down offset syntax
+      if (typeof this.props.offset === 'string') {
+        var offsets = this.props.offset.split(':');
+        if (offsets.length === 2) {
+          var scrollTop = (0, _scrollTop2.default)();
+          var targetOffset = (0, _offset2.default)(targetElm);
+          if (targetOffset.top > scrollTop) {
+            offset = parseInt(offsets[1]);
+          } else {
+            offset = parseInt(offsets[0]);
+          }
+        }
+      }
+
       // scroll to target using the props
-      (0, _scrollTo2.default)(targetElm, this.props.duration, this.props.easing, this.props.offset, 'top', function () {
+      (0, _scrollTo2.default)(targetElm, this.props.duration, this.props.easing, offset, 'top', function () {
         /**
          * @event
          * @name  s-scroll-to:complete
@@ -144,7 +165,8 @@ var SScrollToComponent = function (_native) {
         duration: 400,
 
         /**
-         * Specify an offset in pixels
+         * Specify an offset in pixels.
+         * This can also be in format "up:down" so you can have different offset depending on the scroll direction.
          * @attribute
          * @type  {Number}
          */
@@ -162,6 +184,6 @@ var SScrollToComponent = function (_native) {
   }]);
 
   return SScrollToComponent;
-}((0, _sNativeWebComponent2.default)(HTMLAnchorElement));
+}((0, _sNativeWebComponent2.default)(window.HTMLAnchorElement));
 
 exports.default = SScrollToComponent;
