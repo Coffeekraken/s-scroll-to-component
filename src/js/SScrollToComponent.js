@@ -2,6 +2,8 @@ import __scrollTo from 'coffeekraken-sugar/js/dom/scrollTo'
 import __easingFn from 'coffeekraken-sugar/js/easings/easeInOutQuint'
 import __dispatchEvent from 'coffeekraken-sugar/js/dom/dispatchEvent'
 import __native from 'coffeekraken-sugar/js/core/sNativeWebComponent'
+import __scrollTop from 'coffeekraken-sugar/js/dom/scrollTop'
+import __offset from 'coffeekraken-sugar/js/dom/offset'
 
 export default class SScrollToComponent extends __native(window.HTMLAnchorElement) {
   /**
@@ -29,7 +31,8 @@ export default class SScrollToComponent extends __native(window.HTMLAnchorElemen
       duration: 400,
 
       /**
-       * Specify an offset in pixels
+       * Specify an offset in pixels.
+       * This can also be in format "up:down" so you can have different offset depending on the scroll direction.
        * @attribute
        * @type  {Number}
        */
@@ -94,8 +97,25 @@ export default class SScrollToComponent extends __native(window.HTMLAnchorElemen
      */
     __dispatchEvent(this, `${this.componentNameDash}:start`)
 
+    // handle the offset
+    let offset = this.props.offset
+
+    // handle custom offset with up:down offset syntax
+    if (typeof this.props.offset === 'string') {
+      const offsets = this.props.offset.split(':')
+      if (offsets.length === 2) {
+        const scrollTop = __scrollTop()
+        const targetOffset = __offset(targetElm)
+        if (targetOffset.top > scrollTop) {
+          offset = parseInt(offsets[1])
+        } else {
+          offset = parseInt(offsets[0])
+        }
+      }
+    }
+
     // scroll to target using the props
-    __scrollTo(targetElm, this.props.duration, this.props.easing, this.props.offset, 'top', () => {
+    __scrollTo(targetElm, this.props.duration, this.props.easing, offset, 'top', () => {
       /**
        * @event
        * @name  s-scroll-to:complete
