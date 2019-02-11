@@ -51,14 +51,20 @@ Default : **__easingFn**
 Scroll to the target
 
 
+### Parameters
+Name  |  Type  |  Description  |  Status  |  Default
+------------  |  ------------  |  ------------  |  ------------  |  ------------
+e  |  **{ MouseEvent }**  |  The mouse click event  |  required  |
+
+
 # Events
 
 
-## s-scroll-to:start
+## start
 
 Dispatched when the scroll process start
 
 
-## s-scroll-to:complete
+## complete
 
 Dispatched when the scroll process has complete

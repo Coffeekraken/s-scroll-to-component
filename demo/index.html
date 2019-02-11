@@ -5,7 +5,11 @@
 </head>
 <body>
 
-	<a is="s-scroll-to" href="#my-cool-target" offset="100">Scroll to target</a>
+  <a is="s-scroll-to" href="#my-cool-target" offset="100">Scroll to target</a>
+
+  <a is="s-scroll-to" href="/otherpage#another-target" offset="100">Another target that should not trigger a scroll</a>
+
+  <a is="s-scroll-to" to="my-cool-target" offset="100">Scroll to target (to attribute)</a>
 
   <div id="my-cool-target" style="position:relative; top:3000px; padding-bottom:2000px">
     I'm the target
