@@ -75,30 +75,30 @@ var SScrollToComponent = function (_native) {
   }, {
     key: "_onClick",
     value: function _onClick(e) {
-      // check if need to prevent the default behavior or not
-      if (!this.props.to) {
-        e.preventDefault();
-      }
-
       // scroll to the target
-      this.scrollToTarget();
+      this.scrollToTarget(e);
     }
 
     /**
      * Scroll to the target
+     * @param   {MouseEvent}  e   The mouse click event
      */
 
   }, {
     key: "scrollToTarget",
-    value: function scrollToTarget() {
+    value: function scrollToTarget(e) {
       var _this2 = this;
 
       // get the target to scroll to
-      var targetId = this.props.to || this.getAttribute("href");
+      var to = this.props.to ? ("#" + this.props.to).replace("##", "#") : null;
+
+      console.log("to", to);
+
+      var targetId = to || this.getAttribute("href");
       var pathname = targetId.split("#")[0];
       var hash = targetId.split("#")[1];
       var targetElm = void 0;
-      if (!pathname && !hash) {
+      if (targetId === "#") {
         targetElm = document.body;
       } else if (hash) {
         targetElm = document.querySelector("#" + hash);
@@ -109,12 +109,15 @@ var SScrollToComponent = function (_native) {
       // make sure we have a target
       if (!targetElm) return;
 
+      // prevent the default behavior of the link
+      e.preventDefault();
+
       /**
        * @event
-       * @name  s-scroll-to:start
+       * @name  start
        * Dispatched when the scroll process start
        */
-      (0, _dispatchEvent2.default)(this, this.componentNameDash + ":start");
+      (0, _dispatchEvent2.default)(this, "start");
 
       // handle the offset
       var offset = this.props.offset;
@@ -137,10 +140,10 @@ var SScrollToComponent = function (_native) {
       (0, _scrollTo2.default)(targetElm, this.props.duration, this.props.easing, offset, "top", function () {
         /**
          * @event
-         * @name  s-scroll-to:complete
+         * @name  complete
          * Dispatched when the scroll process has complete
          */
-        (0, _dispatchEvent2.default)(_this2, _this2.componentNameDash + ":complete");
+        (0, _dispatchEvent2.default)(_this2, "complete");
       });
     }
   }], [{

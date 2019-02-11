@@ -66,25 +66,25 @@ export default class SScrollToComponent extends __native(
    * @param   {MouseEvent}  e   The mouse click event
    */
   _onClick(e) {
-    // check if need to prevent the default behavior or not
-    if (!this.props.to) {
-      e.preventDefault();
-    }
-
     // scroll to the target
-    this.scrollToTarget();
+    this.scrollToTarget(e);
   }
 
   /**
    * Scroll to the target
+   * @param   {MouseEvent}  e   The mouse click event
    */
-  scrollToTarget() {
+  scrollToTarget(e) {
     // get the target to scroll to
-    const targetId = this.props.to || this.getAttribute("href");
+    const to = this.props.to ? `#${this.props.to}`.replace("##", "#") : null;
+
+    console.log("to", to);
+
+    const targetId = to || this.getAttribute("href");
     const pathname = targetId.split("#")[0];
     const hash = targetId.split("#")[1];
     let targetElm;
-    if (!pathname && !hash) {
+    if (targetId === "#") {
       targetElm = document.body;
     } else if (hash) {
       targetElm = document.querySelector(`#${hash}`);
@@ -99,12 +99,15 @@ export default class SScrollToComponent extends __native(
     // make sure we have a target
     if (!targetElm) return;
 
+    // prevent the default behavior of the link
+    e.preventDefault();
+
     /**
      * @event
-     * @name  s-scroll-to:start
+     * @name  start
      * Dispatched when the scroll process start
      */
-    __dispatchEvent(this, `${this.componentNameDash}:start`);
+    __dispatchEvent(this, `start`);
 
     // handle the offset
     let offset = this.props.offset;
@@ -133,10 +136,10 @@ export default class SScrollToComponent extends __native(
       () => {
         /**
          * @event
-         * @name  s-scroll-to:complete
+         * @name  complete
          * Dispatched when the scroll process has complete
          */
-        __dispatchEvent(this, `${this.componentNameDash}:complete`);
+        __dispatchEvent(this, `complete`);
       }
     );
   }
