@@ -1,6 +1,6 @@
 {
   "name": "coffeekraken-s-scroll-to-component",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Extension to the anchor tag that provide an easy way to specify a target to scroll to smoothly",
   "main": "dist/index.js",
   "homepage": "http://coffeekraken.io",
@@ -41,8 +41,7 @@
     "changelog": "git-changelog --version_name $npm_package_version  --app_name $npm_package_name --intro \"$npm_package_description\" --logo \".resources/coffeekraken-logo.jpg\""
   },
   "pre-commit": [
-    "test",
-    "lint"
+    "test"
   ],
   "keywords": [
     "webcomponent",

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,29 +8,31 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _scrollTo = require('coffeekraken-sugar/js/dom/scrollTo');
+var _scrollTo = require("coffeekraken-sugar/js/dom/scrollTo");
 
 var _scrollTo2 = _interopRequireDefault(_scrollTo);
 
-var _easeInOutQuint = require('coffeekraken-sugar/js/easings/easeInOutQuint');
+var _easeInOutQuint = require("coffeekraken-sugar/js/easings/easeInOutQuint");
 
 var _easeInOutQuint2 = _interopRequireDefault(_easeInOutQuint);
 
-var _dispatchEvent = require('coffeekraken-sugar/js/dom/dispatchEvent');
+var _dispatchEvent = require("coffeekraken-sugar/js/dom/dispatchEvent");
 
 var _dispatchEvent2 = _interopRequireDefault(_dispatchEvent);
 
-var _sNativeWebComponent = require('coffeekraken-sugar/js/core/sNativeWebComponent');
+var _sNativeWebComponent = require("coffeekraken-sugar/js/core/sNativeWebComponent");
 
 var _sNativeWebComponent2 = _interopRequireDefault(_sNativeWebComponent);
 
-var _scrollTop = require('coffeekraken-sugar/js/dom/scrollTop');
+var _scrollTop = require("coffeekraken-sugar/js/dom/scrollTop");
 
 var _scrollTop2 = _interopRequireDefault(_scrollTop);
 
-var _offset = require('coffeekraken-sugar/js/dom/offset');
+var _offset = require("coffeekraken-sugar/js/dom/offset");
 
 var _offset2 = _interopRequireDefault(_offset);
+
+var _crypto = require("crypto");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50,7 +52,7 @@ var SScrollToComponent = function (_native) {
   }
 
   _createClass(SScrollToComponent, [{
-    key: 'componentMount',
+    key: "componentMount",
 
 
     /**
@@ -59,10 +61,10 @@ var SScrollToComponent = function (_native) {
      * @protected
      */
     value: function componentMount() {
-      _get(SScrollToComponent.prototype.__proto__ || Object.getPrototypeOf(SScrollToComponent.prototype), 'componentMount', this).call(this);
+      _get(SScrollToComponent.prototype.__proto__ || Object.getPrototypeOf(SScrollToComponent.prototype), "componentMount", this).call(this);
 
       // listen for a click
-      this.addEventListener('click', this._onClick.bind(this));
+      this.addEventListener("click", this._onClick.bind(this));
     }
 
     /**
@@ -71,7 +73,7 @@ var SScrollToComponent = function (_native) {
      */
 
   }, {
-    key: '_onClick',
+    key: "_onClick",
     value: function _onClick(e) {
       // check if need to prevent the default behavior or not
       if (!this.props.to) {
@@ -87,17 +89,21 @@ var SScrollToComponent = function (_native) {
      */
 
   }, {
-    key: 'scrollToTarget',
+    key: "scrollToTarget",
     value: function scrollToTarget() {
       var _this2 = this;
 
       // get the target to scroll to
-      var targetId = this.props.to || this.getAttribute('href');
+      var targetId = this.props.to || this.getAttribute("href");
+      var pathname = targetId.split("#")[0];
+      var hash = targetId.split("#")[1];
       var targetElm = void 0;
-      if (targetId === '#') {
+      if (!pathname && !hash) {
         targetElm = document.body;
+      } else if (hash) {
+        targetElm = document.querySelector("#" + hash);
       } else {
-        targetElm = document.querySelector(('#' + targetId).replace('##', '#'));
+        throw new Error("The component " + this.componentNameDash + " need at least an hash to point the scroll to...");
       }
 
       // make sure we have a target
@@ -108,14 +114,14 @@ var SScrollToComponent = function (_native) {
        * @name  s-scroll-to:start
        * Dispatched when the scroll process start
        */
-      (0, _dispatchEvent2.default)(this, this.componentNameDash + ':start');
+      (0, _dispatchEvent2.default)(this, this.componentNameDash + ":start");
 
       // handle the offset
       var offset = this.props.offset;
 
       // handle custom offset with up:down offset syntax
-      if (typeof this.props.offset === 'string') {
-        var offsets = this.props.offset.split(':');
+      if (typeof this.props.offset === "string") {
+        var offsets = this.props.offset.split(":");
         if (offsets.length === 2) {
           var scrollTop = (0, _scrollTop2.default)();
           var targetOffset = (0, _offset2.default)(targetElm);
@@ -128,17 +134,17 @@ var SScrollToComponent = function (_native) {
       }
 
       // scroll to target using the props
-      (0, _scrollTo2.default)(targetElm, this.props.duration, this.props.easing, offset, 'top', function () {
+      (0, _scrollTo2.default)(targetElm, this.props.duration, this.props.easing, offset, "top", function () {
         /**
          * @event
          * @name  s-scroll-to:complete
          * Dispatched when the scroll process has complete
          */
-        (0, _dispatchEvent2.default)(_this2, _this2.componentNameDash + ':complete');
+        (0, _dispatchEvent2.default)(_this2, _this2.componentNameDash + ":complete");
       });
     }
   }], [{
-    key: 'defaultProps',
+    key: "defaultProps",
 
     /**
      * Default props
@@ -147,7 +153,6 @@ var SScrollToComponent = function (_native) {
      */
     get: function get() {
       return {
-
         /**
          * Specify the scroll target id to scroll to.
          * The target must have an id.
@@ -178,7 +183,6 @@ var SScrollToComponent = function (_native) {
          * @type  {Function}
          */
         easing: _easeInOutQuint2.default
-
       };
     }
   }]);
